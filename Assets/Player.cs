@@ -34,7 +34,7 @@ public class Player : NavigationAgent {
 		//Left-click - Move via A*
 		else if (Input.GetMouseButtonDown (1)) {
 
-            //currentPath = AStarSearch (currentPath[currentPathIndex], findClosestWaypoint());
+            currentPath = AStarSearch (currentPath[currentPathIndex], findClosestWaypoint());
 			currentPathIndex = 0;
 		}
 	

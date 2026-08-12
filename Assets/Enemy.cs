@@ -16,6 +16,13 @@ public class Enemy : NavigationAgent {
     private int currentState = 0;
     private int hideIndex = 25;
 
+    // DFA Specification Table
+    private int[,] dfaTable = new int[3, 4] 
+    { 
+        { 1, 0, 1, 2 }, 
+        { 1, 0, 1, 2 }, 
+        { 1, 0, 1, 2 } 
+    };
 
     // Use this for initialization
     void Start() {
@@ -28,9 +35,25 @@ public class Enemy : NavigationAgent {
     }
 
     // Update is called once per frame
-    void Update () {
-
-        //Move();
+    void Update () 
+    {
+        if (newState != currentState) 
+        {
+            currentState = newState;
+        }
+        switch (currentState) 
+        {
+            case 0:
+                Roam();
+                break;
+            case 1:
+                Hide();
+                break;
+            case 2:
+                Attack();
+                break;
+        }   
+        Move();
     }
 
     //Move Enemy
@@ -54,16 +77,23 @@ public class Enemy : NavigationAgent {
 
     //FSM Behaviour - Roam - Randomly select nodes to travel to using Greedy Search Algorithm
     private void Roam() {
-
+        print("roaming");
     }
     
     //FSM Behaviour - Move towards hide location using A* Search Algorithm
     private void Hide() {
-
+        currentPath = AStarSearch(currentPath[currentPathIndex], hideIndex);
+        currentPathIndex = 0;
     }
 
     //FSM Behaviour - Move towards node closest to player using A* Search Algorithm
     private void Attack() {
-
+        // Calculate path towards the node nearest the player
+        if (Vector3.Distance(transform.position, graphNodes.graphNodes[player.currentNodeIndex].transform.position) > minDistance && currentPath[currentPath.Count - 1] != player.currentNodeIndex) 
+        {
+            // A* Search - navigate towards the player
+            currentPath = AStarSearch(currentPath[currentPathIndex], player.currentNodeIndex);
+            currentPathIndex = 0;
+        }
     }
 }
