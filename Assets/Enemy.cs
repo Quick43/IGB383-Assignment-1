@@ -77,7 +77,25 @@ public class Enemy : NavigationAgent {
 
     //FSM Behaviour - Roam - Randomly select nodes to travel to using Greedy Search Algorithm
     private void Roam() {
-        print("roaming");
+        if(Vector3.Distance(transform.position, graphNodes.graphNodes[currentPath[currentPath.Count-1]].transform.position) <= minDistance) 
+        {
+            // Randomly select new waypoint
+            int randomNode = Random.Range(0, graphNodes.graphNodes.Length);
+            // Reset the current path and add first node - needs to be done here because of recursive function of greedy
+            currentPath.Clear();
+            greedyPaintList.Clear();
+            currentPathIndex = 0;
+            currentPath.Add(currentNodeIndex);
+
+            // Greedy Search - navigate towards the random node
+            currentPath = GreedySearch(currentPath[currentPathIndex], randomNode, currentPath);
+
+            // reverse the path so that the first node is the current node and the last node is the random node
+            currentPath.Reverse();
+
+            // remove the first node from the path since it is the current node and we don't want to move to it
+            //currentPath.RemoveAt(currentPath.Count - 1);
+        }
     }
     
     //FSM Behaviour - Move towards hide location using A* Search Algorithm

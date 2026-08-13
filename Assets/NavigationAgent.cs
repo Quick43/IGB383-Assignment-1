@@ -108,11 +108,52 @@ public class NavigationAgent : MonoBehaviour {
         return null;
     }
 
+    public class GreedyChildren : IComparable<GreedyChildren>
+    {
+        public int childID { get; set; }
+        public float childHScore { get; set; }
+
+        public GreedyChildren(int childrenID, float childrenHScore)
+        {
+            childID = childrenID;
+            childHScore = childrenHScore;
+        }
+
+        public int CompareTo(GreedyChildren other)
+        {
+            return childHScore.CompareTo(other.childHScore);
+        }
+    }
+
     //Greedy Search
     public List<int> GreedySearch(int currentNode, int goal, List<int> path) {
 
-        //Code here
+        if(!greedyPaintList.Contains(currentNode))
+        {
+            greedyPaintList.Add(currentNode);
+        }
+        // Make a custom list that stores the current node's children and their heuristic scores
+        List<GreedyChildren> thisNodesChildren = new List<GreedyChildren>();
+        for(int i = 0; i < graphNodes.graphNodes[currentNode].GetComponent<LinkedNodes>().linkedNodesIndex.Length; i++)
+        {
+            thisNodesChildren.Add(new GreedyChildren(graphNodes.graphNodes[currentNode].GetComponent<LinkedNodes>().linkedNodesIndex[i], Heuristic(graphNodes.graphNodes[currentNode].GetComponent<LinkedNodes>().linkedNodesIndex[i], goal)));
+        }
+        thisNodesChildren.Sort();
 
+        // Greedy Search Algorithm
+        for(int i = 0; i < thisNodesChildren.Count; i++)
+        {
+            if(thisNodesChildren[i].childID == goal)
+            {
+                path.Add(thisNodesChildren[i].childID);
+                return path;
+            }
+            else if(!greedyPaintList.Contains(thisNodesChildren[i].childID))
+            {
+                path.Add(thisNodesChildren[i].childID);
+                return GreedySearch(thisNodesChildren[i].childID, goal, path);
+            }
+        }
         return path;
     }
 }
