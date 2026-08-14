@@ -13,19 +13,61 @@ public class Enemy : NavigationAgent {
 
     //FSM Variables
     public int newState = 0;
-    private int currentState = 0;
+    public int currentState = 0;
     private int hideIndex = 25;
 
-    // DFA Specification Table
-    private int[,] dfaTable = new int[3, 4] 
+    // Enemy Type {0 = Chaser, 1 = Stalker, 2 = Shambler, 3 = Fleer}
+    public int EnemyType = 0;
+
+    // DFA Specification Tables
+    private int[,] dfaTableChaser = new int[3, 4] 
     { 
         { 1, 0, 1, 2 }, 
         { 1, 0, 1, 2 }, 
         { 1, 0, 1, 2 } 
     };
 
+    private int[,] dfaTableStalker = new int[3, 4] 
+    { 
+        { 1, 0, 1, 2 }, 
+        { 1, 0, 1, 2 }, 
+        { 1, 0, 1, 2 } 
+    };
+
+    private int[,] dfaTableShambler = new int[3, 4] 
+    { 
+        { 1, 0, 1, 2 }, 
+        { 1, 0, 1, 2 }, 
+        { 1, 0, 1, 2 } 
+    };
+
+    private int[,] dfaTableFleer = new int[3, 4] 
+    { 
+        { 1, 0, 1, 2 }, 
+        { 1, 0, 1, 2 }, 
+        { 1, 0, 1, 2 } 
+    };
+
+    private int[,] dfaTable;
+
     // Use this for initialization
     void Start() {
+        if(EnemyType == 0)
+        {
+            dfaTable = dfaTableChaser;
+        }
+        else if(EnemyType == 1)
+        {
+            dfaTable = dfaTableStalker;
+        }
+        else if(EnemyType == 2)
+        {
+            dfaTable = dfaTableShambler;
+        }
+        else if(EnemyType == 3)
+        {
+            dfaTable = dfaTableFleer;
+        }
         //Find waypoint graph
         graphNodes = GameObject.FindGameObjectWithTag("waypoint graph").GetComponent<WaypointGraph>();
         //Initial node index to move to
@@ -39,7 +81,10 @@ public class Enemy : NavigationAgent {
     {
         if (newState != currentState) 
         {
-            currentState = newState;
+            if(dfaTable[currentState, 0] == 1)
+            {
+                currentState = dfaTable[currentState, newState+1];
+            }
         }
         switch (currentState) 
         {
@@ -94,7 +139,7 @@ public class Enemy : NavigationAgent {
             currentPath.Reverse();
 
             // remove the first node from the path since it is the current node and we don't want to move to it
-            //currentPath.RemoveAt(currentPath.Count - 1);
+            currentPath.RemoveAt(currentPath.Count - 1);
         }
     }
     

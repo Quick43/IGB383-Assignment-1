@@ -24,7 +24,7 @@ public class Player : NavigationAgent {
             currentPath.Add(currentNodeIndex);
 
             //Greedy Search
-            //currentPath = GreedySearch (currentPath [currentPathIndex], findClosestWaypoint(), currentPath);
+            currentPath = GreedySearch (currentPath [currentPathIndex], findClosestWaypoint(), currentPath);
 
             //Reverse path and remove final (i.e. initial) position
             currentPath.Reverse ();

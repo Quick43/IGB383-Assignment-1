@@ -143,15 +143,21 @@ public class NavigationAgent : MonoBehaviour {
         // Greedy Search Algorithm
         for(int i = 0; i < thisNodesChildren.Count; i++)
         {
-            if(thisNodesChildren[i].childID == goal)
+            if(!greedyPaintList.Contains(thisNodesChildren[i].childID))
             {
-                path.Add(thisNodesChildren[i].childID);
-                return path;
-            }
-            else if(!greedyPaintList.Contains(thisNodesChildren[i].childID))
-            {
-                path.Add(thisNodesChildren[i].childID);
-                return GreedySearch(thisNodesChildren[i].childID, goal, path);
+                greedyPaintList.Add(thisNodesChildren[i].childID);
+                if(thisNodesChildren[i].childID == goal)
+                {
+                    path.Add(thisNodesChildren[i].childID);
+                    return path;
+                }
+                    
+                path = GreedySearch(thisNodesChildren[i].childID, goal, path);
+                if(path != null)
+                {
+                    path.Add(thisNodesChildren[i].childID);
+                    return path;
+                }
             }
         }
         return path;
