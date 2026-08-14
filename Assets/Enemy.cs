@@ -30,22 +30,22 @@ public class Enemy : NavigationAgent {
     private int[,] dfaTableStalker = new int[3, 4] 
     { 
         { 1, 0, 1, 2 }, 
-        { 1, 0, 1, 2 }, 
-        { 1, 0, 1, 2 } 
+        { 1, 1, 1, 2 }, 
+        { 1, 1, 1, 2 } 
     };
 
     private int[,] dfaTableShambler = new int[3, 4] 
     { 
-        { 1, 0, 1, 2 }, 
-        { 1, 0, 1, 2 }, 
-        { 1, 0, 1, 2 } 
+        { 1, 0, 0, 2 }, 
+        { 0, 0, 0, 2 }, 
+        { 1, 0, 0, 2 } 
     };
 
     private int[,] dfaTableFleer = new int[3, 4] 
     { 
         { 1, 0, 1, 2 }, 
-        { 1, 0, 1, 2 }, 
-        { 1, 0, 1, 2 } 
+        { 0, 1, 1, 1 }, 
+        { 1, 1, 1, 2 } 
     };
 
     private int[,] dfaTable;
