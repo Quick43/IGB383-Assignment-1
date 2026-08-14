@@ -14,7 +14,8 @@ public class Enemy : NavigationAgent {
     //FSM Variables
     public int newState = 0;
     public int currentState = 0;
-    private int[] hideIndeces = { 3, 11, 44, 51, 54 };
+    private static int[] hideIndeces = { 3, 11, 44, 51, 54 };
+    private int hideIndex = 0;
 
     // Enemy Type {0 = Chaser, 1 = Stalker, 2 = Shambler, 3 = Fleer}
     public int EnemyType = 0;
@@ -52,6 +53,7 @@ public class Enemy : NavigationAgent {
 
     // Use this for initialization
     void Start() {
+        hideIndex = hideIndeces[Random.Range(0, hideIndeces.Length)];
         if(EnemyType == 0)
         {
             dfaTable = dfaTableChaser;
@@ -74,6 +76,7 @@ public class Enemy : NavigationAgent {
         currentPath.Add(currentNodeIndex);
         //Establish reference to player game object
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        
     }
 
     // Update is called once per frame
@@ -83,6 +86,7 @@ public class Enemy : NavigationAgent {
         {
             if(dfaTable[currentState, 0] == 1)
             {
+                hideIndex = hideIndeces[Random.Range(0, hideIndeces.Length)];
                 currentState = dfaTable[currentState, newState+1];
             }
         }
@@ -145,8 +149,6 @@ public class Enemy : NavigationAgent {
     
     //FSM Behaviour - Move towards hide location using A* Search Algorithm
     private void Hide() {
-        // Randomly select a hide location
-        int hideIndex = hideIndeces[Random.Range(0, hideIndeces.Length)];
         currentPath = AStarSearch(currentPath[currentPathIndex], hideIndex);
         currentPathIndex = 0;
     }
